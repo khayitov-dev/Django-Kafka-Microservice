@@ -1,4 +1,4 @@
 # Django-Kafka-Microservice
 
 
-![image](https://github.com/khayitov-dev/Django-Kafka-Microservice/assets/89244992/aa02e634-0b23-4af8-9516-09db19a25f7f)
+![image](https://github.com/khayitov-dev/Django-Kafka-Microservice/assets/89244992/455f4427-1a9d-4d2a-bdfe-55ef907af5d1)
