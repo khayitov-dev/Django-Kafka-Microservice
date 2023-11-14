@@ -1,0 +1,5 @@
+POSTGRES_HOST=monolith_postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=monolith_local_database
+POSTGRES_USER=monolith_local_user
+POSTGRES_PASSWORD=reTRcHFMKDFG234sdfSDF36AyzQ4

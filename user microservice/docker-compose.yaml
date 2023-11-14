@@ -1,0 +1,48 @@
+version: '3.8'
+
+
+volumes:
+  local_postgres_data: { }
+  local_postgres_data_backups: { }
+  static_volume:
+  media_volume:
+
+
+services:
+  user_backend:
+    build:
+      context: .
+      dockerfile: ./compose/local/Dockerfile
+    container_name: users-ms
+    image: users_backend
+    command: /start
+    volumes:
+      - .:/app
+    ports:
+      - 8001:8000
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    depends_on:
+      - user_db
+    networks:
+      - user
+
+  user_db:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: user_postgres
+    container_name: user_db
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data:cached
+      - local_postgres_data_backups:/backups:cached
+    env_file:
+      - ./.envs/.local/.postgres
+    networks:
+      - user
+
+
+networks:
+  user: 
+    name: user

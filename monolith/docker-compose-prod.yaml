@@ -1,0 +1,72 @@
+version: '3.8'
+
+
+volumes:
+  production_postgres_data: { }
+  production_postgres_data_backups: { }
+  static_volume:
+  media_volume:
+
+
+
+services:
+  monolith_backend:
+    build:
+      context: .
+      dockerfile: ./compose/production/django/Dockerfile
+    image: monolith_backend
+    command: /start
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
+    depends_on:
+      - monolith_postgres
+    networks:
+      - monolith
+      - user
+
+      
+  monolith_postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: monolith_postgres
+    container_name: monolith_postgres
+    ports:
+      - 54322:5432
+    volumes:
+      - production_postgres_data:/var/lib/postgresql/data:cached
+      - production_postgres_data_backups:/backups:cached
+    env_file:
+      - ./.envs/.production/.postgres
+    networks:
+      - monolith
+
+  monolith_nginx:
+    build:
+      context: .
+      dockerfile: ./compose/production/nginx/Dockerfile
+    image: monolith_nginx
+    container_name: monolith_nginx_container
+    volumes:
+      - static_volume:/var/www/static
+      - media_volume:/var/www/media/
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - monolith_backend
+    command: /bin/bash -c "chown -R nginx:nginx /var/www/static && chmod -R 755 /var/www/static && nginx -g 'daemon off;'"
+    networks:
+    - monolith
+
+
+networks:
+    monolith:
+    user:
+      external:
+        name: user
