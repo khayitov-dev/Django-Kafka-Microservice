@@ -1,4 +1,4 @@
-Django==4.2.6
+Django==4.2.10
 confluent-kafka==2.3.0
 djangorestframework==3.14.0
 drf-yasg==1.21.7
